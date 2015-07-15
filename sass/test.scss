@@ -1,0 +1,41 @@
+@import "grid";
+
+$cell-color: #91DFEB;
+$wrapp-color: #FAD9E4;
+
+@include grid-verbose();
+
+body {
+  font-family: sans-serif;
+  padding: 0;
+}
+
+h1,h2,h3 {
+  color: #999;
+  padding: 0.5em;
+}
+h2{
+  border-bottom: 1px solid #999;
+}
+
+.container {
+  margin-top: 1em;
+  background-color: #eee;
+}
+.wrap {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  background-color: $wrapp-color;
+  .wrap {
+    @include opacity(.8);
+    background-color: darken($wrapp-color, 15%);
+  }
+}
+.cell {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  background-color: $cell-color;
+  .cell {
+    background-color: darken($cell-color, 15%);
+  }
+}

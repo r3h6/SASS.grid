@@ -1,0 +1,90 @@
+// Extra small screen / phone
+// Note: Deprecated $screen-xs and $screen-phone as of v3.0.1
+$screen-xs:                  480px !default;
+$screen-xs-min:              $screen-xs !default;
+// $screen-phone:               $screen-xs-min !default;
+
+// Small screen / tablet
+// Note: Deprecated $screen-sm and $screen-tablet as of v3.0.1
+$screen-sm:                  768px !default;
+$screen-sm-min:              $screen-sm !default;
+// $screen-tablet:              $screen-sm-min !default;
+
+// Medium screen / desktop
+// Note: Deprecated $screen-md and $screen-desktop as of v3.0.1
+$screen-md:                  992px !default;
+$screen-md-min:              $screen-md !default;
+// $screen-desktop:             $screen-md-min !default;
+
+// Large screen / wide desktop
+// Note: Deprecated $screen-lg and $screen-lg-desktop as of v3.0.1
+$screen-lg:                  1200px !default;
+$screen-lg-min:              $screen-lg !default;
+// $screen-lg-desktop:          $screen-lg-min !default;
+
+// So media queries don't overlap when required, provide a maximum
+$screen-xs-max:              ($screen-sm-min - 1) !default;
+$screen-sm-max:              ($screen-md-min - 1) !default;
+$screen-md-max:              ($screen-lg-min - 1) !default;
+
+@function breakpoint (
+  $query,
+  $lt-ie-class: null,
+  $grid-columns: $grid-columns,
+  $grid-column-width: $grid-column-width,
+  $grid-gutter-width: $grid-gutter-width
+) {
+  @if $query == xs { 
+    $query: "(min-width: #{$screen-xs-min})";
+  }
+  @if $query == sm { 
+    $query: "(min-width: #{$screen-sm-min})";
+  }
+  @if $query == md { 
+    $query: "(min-width: #{$screen-md-min})";
+  }
+  @if $query == lg { 
+    $query: "(min-width: #{$screen-lg-min})";
+  }
+  @if $query == max-xs { 
+    $query: "(max-width: #{$screen-xs-max})";
+  }
+  @if $query == max-sm { 
+    $query: "(max-width: #{$screen-sm-max})";
+  }
+  @if $query == max-md { 
+    $query: "(max-width: #{$screen-md-max})";
+  }
+  @if $query == max-lg { 
+    $query: "(max-width: #{$screen-lg-max})";
+  }
+  @if $query == xs-sm { 
+    $query: "(min-width: #{$screen-xs-min}) and (max-width: #{$screen-xs-max})";
+  }
+  @return $query $lt-ie-class $grid-columns $grid-column-width $grid-gutter-width;
+}
+
+@mixin media ($breakpoint) {
+  $default-grid-columns: $grid-columns;
+  $default-grid-column-width: $grid-column-width;
+  $default-grid-gutter-width: $grid-gutter-width;
+  $default-grid-behavior: $grid-behavior;
+
+  $grid-columns: nth($breakpoint, 3);
+  $grid-column-width: nth($breakpoint, 4);
+  $grid-gutter-width: nth($breakpoint, 5);
+  
+  @media #{unquote(nth($breakpoint, 1))} {
+    @content;
+  }
+  $grid-behavior: fixed;
+  @if nth($breakpoint, 2) != null {
+    #{unquote(nth($breakpoint, 2))} & {
+      @content;
+    }
+  }
+  $grid-columns: $default-grid-columns;
+  $grid-column-width: $default-grid-column-width;
+  $grid-gutter-width: $default-grid-gutter-width;
+  $grid-behavior: $default-grid-behavior;
+}

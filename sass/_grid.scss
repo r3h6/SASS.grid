@@ -1,0 +1,174 @@
+@import "compass";
+
+// ==========================================================================
+// Variables
+// ==========================================================================
+
+$grid-columns          : 12 !default;
+$grid-column-width     : 60px !default;
+$grid-gutter-width     : 30px !default;
+$grid-direction        : left !default; // left, right
+
+$base-font-size        : 16px !default; //  Compass var: Only used for
+$grid-cell-font-size   : $base-font-size !default; // @see mixin grid-inline-wrapper
+
+
+// ==========================================================================
+// Functions
+// ==========================================================================
+
+@function grid-width ($span: $grid-columns) {
+  $grid-width: ($span * $grid-column-width) + (($span - 1) * $grid-gutter-width);
+  @return $grid-width;
+}
+
+@function grid-span ($span, $context: $grid-columns) {
+  @return percentage($span / $context);
+}
+
+@function grid-push ($span, $context: $grid-columns) {
+  @return percentage($span / $context);
+}
+
+@function grid-pull ($span, $context: $grid-columns) {
+  @return grid-push($span, $context) * -1;
+}
+
+@function grid-offset ($span, $context: $grid-columns) {
+  @return grid-push($span, $context);
+}
+
+@function grid-outdent ($span, $context: $grid-columns) {
+  @return grid-push($span, $context) * -1;
+}
+
+// ==========================================================================
+// Mixins
+// ==========================================================================
+
+@mixin grid-float () {
+  @include pie-clearfix;
+  margin-left: $grid-gutter-width / -2;
+  margin-right: $grid-gutter-width / -2;
+}
+@mixin grid-float-span ($span, $context: $grid-columns) {
+  @include box-sizing(border-box);
+  float: left;
+  width: grid-span($span, $context);
+  padding-left: $grid-gutter-width / 2;
+  padding-right: $grid-gutter-width / 2;
+}
+
+@mixin grid-inline (){
+  font-size: 0;
+  > * {
+    font-size: $base-font-size;
+  // } // Why???
+  // > *[class*=g-span] {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+@mixin grid-inline-span ($span, $context: $grid-columns){
+
+}
+
+@mixin grid-fraction ($fraction, $media, $class) {
+  .g-span-#{$media}-#{$class}{
+    width: percentage($fraction);
+  }
+}
+
+// ==========================================================================
+// Verbose
+// ==========================================================================
+
+@mixin grid-verbose ($media: 'sm'){
+  // Verbose some basic rules...
+    body {
+      margin-left: $grid-gutter-width / 2;
+      margin-right: $grid-gutter-width / 2;
+    }
+    .g-container {
+      max-width: grid-width();
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .g-float,
+    .g-inline {
+      margin-left: $grid-gutter-width / -2;
+      margin-right: $grid-gutter-width / -2;
+    }
+
+    // *[class*=g-span] {
+    //   @include box-sizing(border-box);
+    // }
+
+    .g-float {
+      @include pie-clearfix;
+      > *[class*=g-span] {
+        float: $grid-direction;
+      }
+    }
+
+    .g-inline {
+      font-size: 0;
+      > * {
+        font-size: $base-font-size;
+      }
+      > *[class*=g-span] {
+        display: inline-block;
+        zoom: 1; *display: inline;
+        vertical-align: top;
+      }
+    }
+
+    *[class*=g-span] {
+      @include box-sizing(border-box);
+      width: 100%;
+      // float: none;
+      // display: block;
+      padding-left: $grid-gutter-width / 2;
+      padding-right: $grid-gutter-width / 2;
+    }
+
+    *[class*=g-pull],
+    *[class*=g-push] {
+      position: relative;
+    }
+
+    @for $context from 1 to $grid-columns {
+      .g-span-#{$media}-#{$context}{
+        width: grid-span($context, $grid-columns);
+      }
+      .g-push-#{$media}-#{$context}{
+        #{$grid-direction}: grid-push($context, $grid-columns);
+      }
+      .g-pull-#{$media}-#{$context}{
+        #{$grid-direction}: grid-pull($context, $grid-columns);
+      }
+      .g-offset-#{$media}-#{$context}{
+        margin-#{$grid-direction}: grid-offset($context, $grid-columns);
+      }
+
+
+        @for $span from 1 to $context {
+          .g-span-#{$media}-#{$context} {
+            .g-span-#{$media}-#{$span}{
+              width: grid-span($span, $context);
+            }
+            .g-push-#{$media}-#{$span}{
+              #{$grid-direction}: grid-push($span, $context);
+            }
+            .g-pull-#{$media}-#{$span}{
+              #{$grid-direction}: grid-pull($span, $context);
+            }
+            .g-offset-#{$media}-#{$span}{
+              margin-#{$grid-direction}: grid-offset($span, $context);
+            }
+          }
+        }
+
+    }
+}
