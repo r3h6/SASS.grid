@@ -1,9 +1,8 @@
-@import "grid";
+@import "compass";
 
 $cell-color: #91DFEB;
 $wrapp-color: #FAD9E4;
 
-@include grid-verbose();
 
 body {
   font-family: sans-serif;

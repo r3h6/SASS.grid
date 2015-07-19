@@ -29,62 +29,56 @@ $screen-md-max:              ($screen-lg-min - 1) !default;
 
 @function breakpoint (
   $query,
-  $lt-ie-class: null,
   $grid-columns: $grid-columns,
   $grid-column-width: $grid-column-width,
   $grid-gutter-width: $grid-gutter-width
 ) {
-  @if $query == xs { 
+  @if $query == xs {
     $query: "(min-width: #{$screen-xs-min})";
   }
-  @if $query == sm { 
+  @if $query == sm {
     $query: "(min-width: #{$screen-sm-min})";
   }
-  @if $query == md { 
+  @if $query == md {
     $query: "(min-width: #{$screen-md-min})";
   }
-  @if $query == lg { 
+  @if $query == lg {
     $query: "(min-width: #{$screen-lg-min})";
   }
-  @if $query == max-xs { 
+  @if $query == max-xs {
     $query: "(max-width: #{$screen-xs-max})";
   }
-  @if $query == max-sm { 
+  @if $query == max-sm {
     $query: "(max-width: #{$screen-sm-max})";
   }
-  @if $query == max-md { 
+  @if $query == max-md {
     $query: "(max-width: #{$screen-md-max})";
   }
-  @if $query == max-lg { 
+  @if $query == max-lg {
     $query: "(max-width: #{$screen-lg-max})";
   }
-  @if $query == xs-sm { 
+  @if $query == xs-sm {
     $query: "(min-width: #{$screen-xs-min}) and (max-width: #{$screen-xs-max})";
   }
-  @return $query $lt-ie-class $grid-columns $grid-column-width $grid-gutter-width;
+  @return $query $grid-columns $grid-column-width $grid-gutter-width;
 }
 
-@mixin media ($breakpoint) {
+@mixin breakpoint ($breakpoint) {
+
   $default-grid-columns: $grid-columns;
   $default-grid-column-width: $grid-column-width;
   $default-grid-gutter-width: $grid-gutter-width;
-  $default-grid-behavior: $grid-behavior;
 
-  $grid-columns: nth($breakpoint, 3);
-  $grid-column-width: nth($breakpoint, 4);
-  $grid-gutter-width: nth($breakpoint, 5);
-  
+  $grid-columns: nth($breakpoint, 2) !global;
+  $grid-column-width: nth($breakpoint, 3) !global;
+  $grid-gutter-width: nth($breakpoint, 4) !global;
+
   @media #{unquote(nth($breakpoint, 1))} {
     @content;
   }
-  $grid-behavior: fixed;
-  @if nth($breakpoint, 2) != null {
-    #{unquote(nth($breakpoint, 2))} & {
-      @content;
-    }
-  }
-  $grid-columns: $default-grid-columns;
-  $grid-column-width: $default-grid-column-width;
-  $grid-gutter-width: $default-grid-gutter-width;
-  $grid-behavior: $default-grid-behavior;
+
+  $grid-columns: $default-grid-columns !global;
+  $grid-column-width: $default-grid-column-width !global;
+  $grid-gutter-width: $default-grid-gutter-width !global;
+
 }
